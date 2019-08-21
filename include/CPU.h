@@ -18,7 +18,7 @@ class CPU : Module
             unsigned char P; //Processor Status (flags)
 
 
-        unsigned char memory[memsize];
+        vector<int> memory(2);
 
     protected:
         void mirror();

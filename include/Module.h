@@ -1,11 +1,13 @@
 #ifndef MODULE_H
 #define MODULE_H
 
+#include <vector>
+
+using namespace std;
 
 class Module
 {
     public:
-
         struct MyByte{
 
             unsigned char byt;
