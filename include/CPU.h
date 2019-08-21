@@ -18,7 +18,7 @@ class CPU : Module
             unsigned char P; //Processor Status (flags)
 
 
-        vector<int> memory(2);
+        //vector<int> memory(2);
 
     protected:
         void mirror();
@@ -26,6 +26,7 @@ class CPU : Module
         void loadRom();
         void instruction();
         void writeData();
+        vector<int> akk(2,0);
 
 };
 
