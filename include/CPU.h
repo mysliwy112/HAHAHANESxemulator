@@ -1,8 +1,8 @@
 #ifndef CPU_H
 #define CPU_H
 
-
-class CPU
+#include<Module.h>
+class CPU : Module
 {
     public:
         CPU();
