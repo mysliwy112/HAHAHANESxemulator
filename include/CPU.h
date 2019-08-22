@@ -2,31 +2,58 @@
 #define CPU_H
 
 #include<Module.h>
-class CPU : Module
+
+
+
+
+
+
+
+class CPU : public Module
 {
+    struct CPUmem{
+        Mem8 memory[65536];
+        Mem8& operator [] (short i){
+            if(i<8)
+                return memory[i];
+            else
+                return memory[0];
+        }
+    };
+    enum flag{
+        Carry,
+        Zero,
+        InterruptDis,
+        Decimal,
+        Break,
+        Overflow=6,
+        Negative
+    };
     public:
         CPU();
         //params
-            int memsize=65535;
+            static const int memsize=65535;
+
+        long long cycle=0;
 
         //registers
-            unsigned short PC; //Program Counter
-            unsigned short SP; //Stack Pointer
-            unsigned char A; //Accumulator
-            unsigned char X; //Index Register
-            unsigned char Y; //Index Register
-            unsigned char P; //Processor Status (flags)
+            Mem16 PC; //Program Counter
+            Mem8 SP; //Stack Pointer
+            Mem8 A; //Accumulator
+            Mem8 X; //Index Register
+            Mem8 Y; //Index Register
+            Mem8 P; //Processor Status (flags)
+            CPUmem memory;
 
-
-        //vector<int> memory(2);
-
+        virtual void action();
     protected:
         void mirror();
         void sendData();
         void loadRom();
         void instruction();
-        void writeData();
-        vector<int> akk(2,0);
+
+
+
 
 };
 

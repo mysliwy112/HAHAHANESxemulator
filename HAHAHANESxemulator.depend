@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1566328317 source:e:\cplusplus\hahahanesxemulator\main.cpp
+1566412784 source:e:\cplusplus\hahahanesxemulator\main.cpp
 	<SFML/Graphics.hpp>
 	<iostream>
+	<CPU.h>
 
 1525812018 e:\lib\sfml-2.5.1-x64\include\sfml\graphics.hpp
 	<SFML/Window.hpp>
@@ -415,12 +416,12 @@
 1566329680 source:e:\cplusplus\hahahanesxemulator\src\module.cpp
 	"Module.h"
 
-1566404569 e:\cplusplus\hahahanesxemulator\include\module.h
+1566412931 e:\cplusplus\hahahanesxemulator\include\module.h
 	<vector>
 
-1566404080 source:e:\cplusplus\hahahanesxemulator\src\cpu.cpp
+1566412975 source:e:\cplusplus\hahahanesxemulator\src\cpu.cpp
 	"CPU.h"
 
-1566404666 e:\cplusplus\hahahanesxemulator\include\cpu.h
+1566413225 e:\cplusplus\hahahanesxemulator\include\cpu.h
 	<Module.h>
 
