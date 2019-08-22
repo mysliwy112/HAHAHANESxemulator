@@ -1,17 +1,48 @@
 #ifndef MODULE_H
 #define MODULE_H
 
+#include <SFML/Graphics.hpp>
+
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
 template<class T>
 struct Mem
 {
+    Mem(){}
+    Mem(T u):byt(u){}
+
     T byt;
+
     Mem& operator=(T a) {
         byt = a;
         return *this;
+    }
+
+    Mem& operator+=(T a) {
+        byt+=a;
+        return *this;
+    }
+    Mem& operator-=(T a) {
+        byt-=a;
+        return *this;
+    }
+
+    T& operator--(int) {
+        T temp=byt--;
+        return temp;
+    }
+    T& operator--() {
+        return --byt;
+    }
+    T& operator++(int) {
+        T temp=byt++;
+        return temp;
+    }
+    T& operator++() {
+        return ++byt;
     }
 
     operator T(){
