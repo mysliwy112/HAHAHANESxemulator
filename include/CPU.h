@@ -49,8 +49,8 @@ class CPU : public Module
         void powerUp();
         void reset();
 
-        uint8_t read(short address);
-        void write(short address, uint8_t value);
+        Mem8 read(int address);
+        void write(int address, uint8_t value);
         //uint8_t accessData(bool write, short address, uint8_t value);
 
     protected:
@@ -58,6 +58,32 @@ class CPU : public Module
         void sendData();
         void loadRom();
         void instruction();
+        //addressing modes
+        int adrAccumulator(){
+            return 0x10001;
+        }
+        int adrImmediate(){
+            return ++PC;
+        }
+        int adrZero(){
+            return read(++PC);
+        }
+        int adrZeroX(){
+            return read(++PC)+X;
+        }
+        int adrZeroY(){
+            return read(++PC)+Y;
+        }
+        int adrRelative();
+        int adrAbsolute(){
+            return combine8(read(++PC),read(++PC));
+        }
+        int adrAbsoluteX(){
+            return combine8(read(++PC),read(++PC))+X;
+        }
+        int adrAbsoluteY(){
+            return combine8(read(++PC),read(++PC))+Y;
+        }
 
 
 

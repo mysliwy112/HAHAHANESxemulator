@@ -75,6 +75,10 @@ class Module
         virtual void action()=0;
 
         Module();
+        short combine8(uint8_t a, uint8_t b){
+            return (int(a) << 8) | b;
+
+        }
 
     protected:
 
