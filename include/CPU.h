@@ -74,7 +74,9 @@ class CPU : public Module
         int adrZeroY(){
             return read(++PC)+Y;
         }
-        int adrRelative();
+        int adrRelative(){
+            return static_cast<int>(read(++PC))+PC;
+        }
         int adrAbsolute(){
             return combine8(read(++PC),read(++PC));
         }
@@ -84,6 +86,7 @@ class CPU : public Module
         int adrAbsoluteY(){
             return combine8(read(++PC),read(++PC))+Y;
         }
+        //adrIndirect
 
 
 
