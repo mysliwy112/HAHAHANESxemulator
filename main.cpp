@@ -5,6 +5,6 @@ using namespace std;
 int main()
 {
     CPU cp;
-    cp.reset();
+    cp.powerUp();
     return 0;
 }

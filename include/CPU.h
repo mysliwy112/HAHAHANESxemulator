@@ -63,30 +63,55 @@ class CPU : public Module
             return 0x10001;
         }
         int adrImmediate(){
-            return ++PC;
+            cycle+=2;
+            return PC++;
         }
         int adrZero(){
-            return read(++PC);
+            cycle+=3;
+            return read(PC++);
         }
         int adrZeroX(){
-            return read(++PC)+X;
+            cycle+=4;
+            return (read(PC++)+X)%256;
         }
         int adrZeroY(){
-            return read(++PC)+Y;
+            cycle+=4;
+            return (read(PC++)+Y)%256;
         }
         int adrRelative(){
-            return static_cast<int>(read(++PC))+PC;
+            //add cycle
+            return static_cast<int>(read(PC++))+PC;
         }
         int adrAbsolute(){
-            return combine8(read(++PC),read(++PC));
+            //relative? 4
+            return combine8(read(PC++),read(PC++));
         }
         int adrAbsoluteX(){
-            return combine8(read(++PC),read(++PC))+X;
+            //add cycle
+            cycle+=4;
+            return combine8(read(PC++),read(PC++))+X;
         }
         int adrAbsoluteY(){
-            return combine8(read(++PC),read(++PC))+Y;
+            //add cycle
+            cycle+=4;
+            return combine8(read(PC++),read(PC++))+Y;
         }
-        //adrIndirect
+        int adrIndirect(){
+            //+5 only JMP
+            int address=combine8(read(PC++),read(PC++));
+            return combine8(read(address),read(address+1));
+        }
+        int adrIndirectX(){
+            cycle+=6;
+            int address=PC+++X;
+            return read(combine8(read(address%256),read((address+1)%256)));
+        }
+        int adrIndirectY(){
+            //add cycle
+            cycle+=5;
+            int address=PC++;
+            return read(combine8(read(address),read((address+1)%256))+Y);
+        }
 
 
 

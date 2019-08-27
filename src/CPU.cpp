@@ -60,13 +60,40 @@ void CPU::action(){
 }
 
 void CPU::instruction(){
-    Mem8 instr(read(PC));
+    Mem8 instr(read(PC++));
+    int address=0;
+
     switch(instr.gSmol(0,2)){
     case 0:
 
     break;
     case 1:
-        //switch(instr.gSmol(2,3);)
+        switch(instr.gSmol(2,3)){
+            case 0:
+                address=adrIndirectX();
+            break;
+            case 1:
+                address=adrZero();
+            break;
+            case 2:
+                address=adrImmediate();
+            break;
+            case 3:
+                address=adrAccumulator();
+            break;
+            case 4:
+                address=adrIndirectY();
+            break;
+            case 5:
+                address=adrZeroX();
+            break;
+            case 6:
+                address=adrAbsoluteY();
+            break;
+            case 7:
+                address=adrAbsoluteX();
+            break;
+        }
     break;
     case 2:
 

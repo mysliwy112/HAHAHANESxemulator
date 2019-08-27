@@ -76,7 +76,7 @@ class Module
 
         Module();
         short combine8(uint8_t a, uint8_t b){
-            return (int(a) << 8) | b;
+            return (int(b) << 8) | a;
 
         }
 
