@@ -67,6 +67,7 @@ void CPU::instruction(){
     case 0:
 
     break;
+
     case 1:
         switch(instr.gSmol(2,3)){
             case 0:
@@ -76,10 +77,14 @@ void CPU::instruction(){
                 address=adrZero();
             break;
             case 2:
-                address=adrImmediate();
+                if(instr==0x85){
+                    //NOP
+                }else{
+                    address=adrImmediate();
+                }
             break;
             case 3:
-                address=adrAccumulator();
+                address=adrAbsolute();
             break;
             case 4:
                 address=adrIndirectY();
@@ -94,7 +99,65 @@ void CPU::instruction(){
                 address=adrAbsoluteX();
             break;
         }
+
+        switch(instr.gSmol(5,3)){
+            case 0:{//ORA
+                A=A|read(address);
+                setZero(A);
+                setNegative(A);
+            break;}
+            case 1:{//AND
+                A=A&read(address);
+                setZero(A);
+                setNegative(A);
+            break;}
+            case 2:{//EOR
+                A=A^read(address);
+                setZero(A);
+                setNegative(A);
+            break;}
+            case 3:{//ADC
+                int a=read(address)+A+P.gBit(Carry);
+                if (a>255)
+                    P.sBit(Carry,1);
+                else
+                    P.sBit(Carry,0);
+                A=a;
+                setZero(A);
+                setNegative(A);
+            break;}
+            case 4:{//STA
+                write(address,A);
+                //(no additional cycles)
+            break;}
+            case 5:{//LDA
+                A=read(address);
+                setZero(A);
+                setNegative(A);
+            break;}
+            case 6:{//CMP
+                int8_t a=A-read(address);
+                if(a<0)
+                    P.sBit(Negative,1);
+                else if(a>0)
+                    P.sBit(Carry,1);
+                else{
+                    P.sBit(Zero,1);
+                }
+            break;}
+            case 7:{//SBC
+                int a=A-read(address)-!P.gBit(Carry);
+                if (a>255)
+                    P.sBit(Carry,0);
+                else
+                    P.sBit(Carry,1);
+                A=a;
+                setZero(A);
+                setNegative(A);
+            break;}
+        }
     break;
+
     case 2:
 
     break;

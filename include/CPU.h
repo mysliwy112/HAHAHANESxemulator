@@ -58,6 +58,16 @@ class CPU : public Module
         void sendData();
         void loadRom();
         void instruction();
+
+        void setNegative(Mem8 num){
+            P.sBit(Negative,num.gBit(Negative));
+        }
+
+        void setZero(Mem8 num){
+            P.sBit(Zero,!num);
+        }
+
+
         //addressing modes
         int adrAccumulator(){
             return 0x10001;
