@@ -53,6 +53,11 @@ class CPU : public Module
         void write(int address, uint8_t value);
         //uint8_t accessData(bool write, short address, uint8_t value);
 
+        void push(int value);
+        Mem8 pull();
+
+
+
     protected:
         void mirror();
         void sendData();
@@ -123,7 +128,10 @@ class CPU : public Module
             return read(combine8(read(address),read((address+1)%256))+Y);
         }
 
-
+        //special instructions
+        void insNOP(){
+            cycle+=2;
+        }
 
 
 

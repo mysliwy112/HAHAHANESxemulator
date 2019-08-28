@@ -69,8 +69,6 @@ using Mem64=Mem<uint64_t>;
 class Module
 {
     public:
-
-
         long long cycle=0;
         virtual void action()=0;
 

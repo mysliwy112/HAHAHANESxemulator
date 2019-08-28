@@ -52,6 +52,13 @@ void CPU::write(int address, uint8_t value){
     }
 }
 
+void CPU::push(int value){
+    write(SP--+0x100,value);
+}
+
+Mem8 CPU::pull(){
+    return read(++SP+0x100);
+}
 
 
 void CPU::action(){
@@ -64,8 +71,224 @@ void CPU::instruction(){
     int address=0;
 
     switch(instr.gSmol(0,2)){
-    case 0:
+    case 0x0:
+        switch(instr){
+            case 0x0:{//BRK
+                cycle+=7;
+            break;}
+            case 0x8:{//PHP
+                cycle+=3;
+                push(P);
+                return;
+            break;}
+            case 0x10{//BPL
 
+                return;
+            break;}
+            case 0x18:{//CLC
+
+                return;
+            break;}
+            case 0x20:{//JSR
+
+                return;
+            break;}
+            case 0x24:{//BIT
+
+                return;
+            break;}
+            case 0x28:{//PLP
+
+                return;
+            break;}
+            case 0x2C:{//BIT
+
+                return;
+            break;}
+            case 0x30:{//BMI
+
+                return;
+            break;}
+            case 0x38:{//SEC
+
+                return;
+            break;}
+            case 0x40:{//RTI
+
+                return;
+            break;}
+            case 0x48:{//PHA
+
+                return;
+            break;}
+            case 0x4C:{//JMP
+
+                return;
+            break;}
+            case 0x50:{//BVC
+
+                return;
+            break;}
+            case 0x58:{//CLI
+
+                return;
+            break;}
+            case 0x60:{//RTS
+
+                return;
+            break;}
+            case 0x68:{//PLA
+
+                return;
+            break;}
+            case 0xC:{//JMP
+
+                return;
+            break;}
+            case 0x70:{//BVS
+
+                return;
+            break;}
+            case 0x78:{//SEI
+
+                return;
+            break;}
+            case 0x84:{//STY
+
+                return;
+            break;}
+            case 0x88:{//DEY
+
+                return;
+            break;}
+            case 0x8C:{//STY
+
+                return;
+            break;}
+            case 0x90:{//BCC
+
+                return;
+            break;}
+            case 0x94:{//STY
+
+                return;
+            break;}
+            case 0x98:{//TYA
+
+                return;
+            break;}
+            case 0x9C:{//SHY*
+
+                return;
+            break;}
+            case 0xA0:{//LDY
+
+                return;
+            break;}
+            case 0xA4:{//LDY
+
+                return;
+            break;}
+            case 0xA8:{//TAY
+
+                return;
+            break;}
+            case 0xAC:{//LDY
+
+                return;
+            break;}
+            case 0xB0:{//BSC
+
+                return;
+            break;}
+            case 0xB4:{//LDY
+
+                return;
+            break;}
+            case 0xB8:{//CLV
+
+                return;
+            break;}
+            case 0xBC:{//LDY
+
+                return;
+            break;}
+            case 0xC0:{//CPY
+
+                return;
+            break;}
+            case 0xC4:{//CPY
+
+                return;
+            break;}
+            case 0xC8:{//INY
+
+                return;
+            break;}
+            case 0xCC:{//CPY
+
+                return;
+            break;}
+            case 0xD0:{//BNE
+
+                return;
+            break;}
+            case 0xD8:{//CLD
+
+                return;
+            break;}
+            case 0xE0:{//CPX
+
+                return;
+            break;}
+            case 0xE4:{//CPX
+
+                return;
+            break;}
+            case 0xE8:{//INX
+
+                return;
+            break;}
+            case 0xEC:{//CPX
+
+                return;
+            break;}
+            case 0xF0:{//BEQ
+
+                return;
+            break;}
+            case 0xF8:{//SED
+
+                return;
+            break;}
+            default:{
+                insNOP();
+                return;
+            break;}
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
     break;
 
     case 1:
@@ -78,7 +301,8 @@ void CPU::instruction(){
             break;
             case 2:
                 if(instr==0x85){
-                    //NOP
+                    insNOP();
+                    return;
                 }else{
                     address=adrImmediate();
                 }
@@ -105,16 +329,19 @@ void CPU::instruction(){
                 A=A|read(address);
                 setZero(A);
                 setNegative(A);
+                return;
             break;}
             case 1:{//AND
                 A=A&read(address);
                 setZero(A);
                 setNegative(A);
+                return;
             break;}
             case 2:{//EOR
                 A=A^read(address);
                 setZero(A);
                 setNegative(A);
+                return;
             break;}
             case 3:{//ADC
                 int a=read(address)+A+P.gBit(Carry);
@@ -125,15 +352,18 @@ void CPU::instruction(){
                 A=a;
                 setZero(A);
                 setNegative(A);
+                return;
             break;}
             case 4:{//STA
                 write(address,A);
                 //(no additional cycles)
+                return;
             break;}
             case 5:{//LDA
                 A=read(address);
                 setZero(A);
                 setNegative(A);
+                return;
             break;}
             case 6:{//CMP
                 int8_t a=A-read(address);
@@ -144,6 +374,7 @@ void CPU::instruction(){
                 else{
                     P.sBit(Zero,1);
                 }
+                return;
             break;}
             case 7:{//SBC
                 int a=A-read(address)-!P.gBit(Carry);
@@ -154,6 +385,7 @@ void CPU::instruction(){
                 A=a;
                 setZero(A);
                 setNegative(A);
+                return;
             break;}
         }
     break;
