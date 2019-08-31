@@ -70,10 +70,18 @@ using Mem64=Mem<uint64_t>;
 class Module
 {
     public:
-        long long cycle=0;
-        virtual void action()=0;
-
         Module();
+
+        long long cycle=0;
+
+        //virtual void action()=0;
+
+
+
+        //communication
+        Mem8 sendValue(Mem8);
+
+
         short combine8(uint8_t a, uint8_t b){
             return (int(b) << 8) | a;
 

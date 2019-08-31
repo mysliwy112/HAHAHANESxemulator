@@ -30,7 +30,8 @@ Mem8 CPU::read(int address){
     }else if(address<0x4020){//APU test registers
         return memory[address];
     }else if(address<0x10000){//ROM
-        return memory[address];
+        //return memory[address];
+        //rom.sendValue();
     }else if(address==0x10001){
         return A;
     }

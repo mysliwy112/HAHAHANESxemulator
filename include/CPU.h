@@ -3,6 +3,8 @@
 
 #include<Module.h>
 
+#include<ROM.h>
+
 class CPU : public Module
 {
 //    struct CPUmem{
@@ -31,10 +33,16 @@ class CPU : public Module
 
     public:
         CPU();
+
         //params
             static const int memsize=0x10000;
 
         long long cycle=0;
+
+        //modules
+            //ROM *ppu;
+            Module *apu;
+            Module *rom;
 
         //registers
             Mem16 PC; //Program Counter
@@ -44,7 +52,8 @@ class CPU : public Module
             Mem8 Y; //Index Register
             Mem8 P; //Processor Status (flags)
 
-        vector<Mem8> memory[65536];
+        Mem8 memory [65536];
+
 
         virtual void action();
         void powerUp();

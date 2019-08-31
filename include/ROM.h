@@ -3,6 +3,8 @@
 
 #include<Module.h>
 
+#include<CPU.h>
+
 struct iNESstruct{
     Mem8 PRGOsizeLSB;
     Mem8 CHROsizeLSB;
@@ -43,25 +45,31 @@ class ROM : public Module
         ROM();
         virtual ~ROM();
 
+        ifstream rom;
+
+        //iNES
+            iNESstruct iNES;
+
+            vector <Mem8> trainer;
+
+            vector <Mem8> PRGrom;
+            vector <Mem8> CHRrom;
+
+            vector <Mem8> MISrom;
+
+            const char chNES[5]="NES\x1A";
+
+
         void load(char* path);
+
         void loadNES();
 
         void mapper();
 
-        ifstream rom;
 
 
-        //iNES
-        vector <Mem8> trainer;
 
-        vector <Mem8> PRGrom;
-        vector <Mem8> CHRrom;
 
-        vector <Mem8> MISrom;
-
-        iNESstruct iNES;
-
-        const char chNES[5]="NES\x1A";
 
     protected:
 
