@@ -40,7 +40,7 @@ class CPU : public Module
         long long cycle=0;
 
         //modules
-            //ROM *ppu;
+            ROM *ppu;
             Module *apu;
             Module *rom;
 

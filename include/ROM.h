@@ -59,6 +59,12 @@ class ROM : public Module
 
             const char chNES[5]="NES\x1A";
 
+        Mem8 readCPU(int address);
+        void writeCPU(int address, Mem8 value);
+
+        Mem8 readPPU(int address);
+        void writePPU(int address, Mem8 value);
+
 
         void load(char* path);
 

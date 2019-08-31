@@ -76,12 +76,6 @@ class Module
 
         //virtual void action()=0;
 
-
-
-        //communication
-        Mem8 sendValue(Mem8);
-
-
         short combine8(uint8_t a, uint8_t b){
             return (int(b) << 8) | a;
 
@@ -91,5 +85,9 @@ class Module
 
     private:
 };
+
+class CPU;
+//class PPU;
+class ROM;
 
 #endif // MODULE_H

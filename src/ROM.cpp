@@ -1,16 +1,16 @@
-#include "ROM.h"
+#include "ROMloader.h"
 
-ROM::ROM()
+ROMloader::ROMloader()
 {
     //ctor
 }
 
-ROM::~ROM()
+ROMloader::~ROMloader()
 {
     //dtor
 }
 
-void ROM::load(char* path){
+void ROMloader::load(char* path){
     rom.open(path,ios::binary);
     if(!rom.good()){
         cout<<"Can't load rom."<<endl;
@@ -26,7 +26,14 @@ void ROM::load(char* path){
     }
 }
 
-void ROM::loadNES(){
+Mem8 ROMloader::readCPU(int address){
+
+
+}
+
+
+
+void ROMloader::loadNES(){
     Mem8 header[16];
     rom.read((char*)header, 12);
 
@@ -145,8 +152,5 @@ void ROM::loadNES(){
         char buffer[MISsiz];
         rom.read(buffer,MISsiz);
         MISrom.insert(MISrom.begin(),&buffer[0],&buffer[512]);
-
     }
-
-
 }

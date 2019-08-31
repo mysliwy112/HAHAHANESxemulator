@@ -31,7 +31,7 @@ Mem8 CPU::read(int address){
         return memory[address];
     }else if(address<0x10000){//ROM
         //return memory[address];
-        //rom.sendValue();
+        return rom.readCPU();
     }else if(address==0x10001){
         return A;
     }
@@ -47,7 +47,7 @@ void CPU::write(int address, uint8_t value){
     }else if(address<0x4020){//APU test registers
         memory[address]=value;
     }else if(address<0x10000){//ROM
-        memory[address]=value;
+        rom.writeCPU(value);
     }else if(address==0x10001){
         A=value;
     }
