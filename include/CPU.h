@@ -43,7 +43,8 @@ class CPU : public Module
             Mem8 X; //Index Register
             Mem8 Y; //Index Register
             Mem8 P; //Processor Status (flags)
-            Mem8 memory[65536];
+
+        vector<Mem8> memory[65536];
 
         virtual void action();
         void powerUp();
@@ -75,6 +76,7 @@ class CPU : public Module
 
         //addressing modes
         int adrAccumulator(){
+            cycle+=2;
             return 0x10001;
         }
         int adrImmediate(){

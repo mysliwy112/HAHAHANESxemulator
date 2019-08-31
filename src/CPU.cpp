@@ -81,16 +81,23 @@ void CPU::instruction(){
                 push(P);
                 return;
             break;}
-            case 0x10{//BPL
-
+            case 0x10:{//BPL //add cycle
+                cycle+=2;
+                if(!P.gBit(Negative)){
+                    cycle++;
+                    PC=adrRelative();
+                }
                 return;
             break;}
             case 0x18:{//CLC
-
+                cycle+=2;
+                P.sBit(Carry,0);
                 return;
             break;}
-            case 0x20:{//JSR
-
+            case 0x20:{//JSR //check
+                cycle+=6;
+                push(PC);
+                PC=adrAbsolute();
                 return;
             break;}
             case 0x24:{//BIT
@@ -98,83 +105,114 @@ void CPU::instruction(){
                 return;
             break;}
             case 0x28:{//PLP
-
+                cycle+=4;
+                P=pull();
                 return;
             break;}
             case 0x2C:{//BIT
 
                 return;
             break;}
-            case 0x30:{//BMI
-
+            case 0x30:{//BMI //add cycle
+                cycle+=2;
+                if(P.gBit(Negative)){
+                    cycle++;
+                    PC=adrRelative();
+                }
                 return;
             break;}
             case 0x38:{//SEC
-
+                P.sBit(Carry,1);
                 return;
             break;}
             case 0x40:{//RTI
-
+                cycle+=6;
+                P=pull();
+                PC=pull();
                 return;
             break;}
             case 0x48:{//PHA
-
+                cycle+=3;
+                push(A);
                 return;
             break;}
-            case 0x4C:{//JMP
-
+            case 0x4C:{//JMP //add cycles
+                cycle+=3;
+                PC=adrAbsolute();
                 return;
             break;}
-            case 0x50:{//BVC
-
+            case 0x50:{//BVC //add cycles
+                if(!P.gBit(Overflow)){
+                    cycle++;
+                    PC=adrRelative();
+                }
                 return;
             break;}
             case 0x58:{//CLI
-
+                cycle+=2;
+                P.sBit(InterruptDis,0);
                 return;
             break;}
-            case 0x60:{//RTS
-
+            case 0x60:{//RTS //minus one?
+                cycle+=6;
+                PC=pull();
                 return;
             break;}
             case 0x68:{//PLA
-
+                cycle+=4;
+                A=pull();
+                setZero(A);
+                setNegative(A);
                 return;
             break;}
             case 0xC:{//JMP
-
+                cycle+=5;
+                PC=adrIndirect();
                 return;
             break;}
-            case 0x70:{//BVS
-
+            case 0x70:{//BVS //add cycles
+                if(P.gBit(Overflow)){
+                    cycle++;
+                    PC=adrRelative();
+                }
                 return;
             break;}
             case 0x78:{//SEI
-
+                cycle+=2;
+                P.sBit(InterruptDis,1);
                 return;
             break;}
             case 0x84:{//STY
-
+                write(adrZero(),Y);
                 return;
             break;}
             case 0x88:{//DEY
-
+                cycle+=2;
+                Y--;
+                setZero(Y);
+                setNegative(Y);
                 return;
             break;}
             case 0x8C:{//STY
-
+                write(adrAbsolute(),Y);
                 return;
             break;}
-            case 0x90:{//BCC
-
+            case 0x90:{//BCC //add cycles
+                if(P.gBit(Carry)){
+                    cycle++;
+                    PC=adrRelative();
+                }
                 return;
             break;}
             case 0x94:{//STY
-
+                write(adrZeroX(),Y);
                 return;
             break;}
             case 0x98:{//TYA
-
+                cycle+=2;
+                A=Y;
+                setZero(A);
+                setNegative(A);
                 return;
             break;}
             case 0x9C:{//SHY*
@@ -182,83 +220,156 @@ void CPU::instruction(){
                 return;
             break;}
             case 0xA0:{//LDY
-
+                Y=read(adrImmediate());
+                setZero(Y);
+                setNegative(Y);
                 return;
             break;}
             case 0xA4:{//LDY
-
+                Y=read(adrZero());
+                setZero(Y);
+                setNegative(Y);
                 return;
             break;}
             case 0xA8:{//TAY
-
+                cycle+=2;
+                Y=A;
+                setZero(Y);
+                setNegative(Y);
                 return;
             break;}
             case 0xAC:{//LDY
-
+                Y=read(adrAbsolute());
+                setZero(Y);
+                setNegative(Y);
                 return;
             break;}
-            case 0xB0:{//BSC
-
+            case 0xB0:{//BCS //add cycles
+                if(!P.gBit(Carry)){
+                    cycle++;
+                    PC=adrRelative();
+                }
                 return;
             break;}
             case 0xB4:{//LDY
-
+                Y=read(adrZeroX());
+                setZero(Y);
+                setNegative(Y);
                 return;
             break;}
             case 0xB8:{//CLV
-
+                cycle+=2;
+                P.sBit(Overflow,0);
                 return;
             break;}
             case 0xBC:{//LDY
-
+                Y=read(adrAbsoluteX());
+                setZero(Y);
+                setNegative(Y);
                 return;
             break;}
             case 0xC0:{//CPY
-
+                int8_t y=Y-read(adrImmediate());
+                if(y<0)
+                    P.sBit(Negative,1);
+                else
+                    P.sBit(Carry,1);
+                if(y==0){
+                    P.sBit(Zero,1);
+                }
                 return;
             break;}
             case 0xC4:{//CPY
-
+                int8_t y=Y-read(adrZero());
+                if(y<0)
+                    P.sBit(Negative,1);
+                else
+                    P.sBit(Carry,1);
+                if(y==0){
+                    P.sBit(Zero,1);
+                }
                 return;
             break;}
             case 0xC8:{//INY
-
+                cycle+=2;
+                Y++;
+                setZero(Y);
+                setNegative(Y);
                 return;
             break;}
             case 0xCC:{//CPY
-
+                int8_t y=Y-read(adrAbsolute());
+                if(y<0)
+                    P.sBit(Negative,1);
+                else
+                    P.sBit(Carry,1);
+                if(y==0){
+                    P.sBit(Zero,1);
+                }
                 return;
             break;}
-            case 0xD0:{//BNE
-
+            case 0xD0:{//BNE //add cycle
+                if(!P.gBit(Zero)){
+                    cycle++;
+                    PC=adrRelative();
+                }
                 return;
             break;}
             case 0xD8:{//CLD
-
+                cycle+=2;
+                P.sBit(Decimal,0);
                 return;
             break;}
             case 0xE0:{//CPX
-
+                int8_t x=X-read(adrImmediate());
+                if(x<0)
+                    P.sBit(Negative,1);
+                else
+                    P.sBit(Carry,1);
+                if(x==0){
+                    P.sBit(Zero,1);
+                }
                 return;
             break;}
             case 0xE4:{//CPX
-
+                int8_t x=X-read(adrZero());
+                if(x<0)
+                    P.sBit(Negative,1);
+                else
+                    P.sBit(Carry,1);
+                if(x==0){
+                    P.sBit(Zero,1);
+                }
                 return;
             break;}
             case 0xE8:{//INX
-
+                cycle+=2;
+                X++;
+                setZero(X);
+                setNegative(X);
                 return;
             break;}
             case 0xEC:{//CPX
-
+                int8_t x=X-read(adrAbsolute());
+                if(x<0)
+                    P.sBit(Negative,1);
+                else
+                    P.sBit(Carry,1);
+                if(x==0){
+                    P.sBit(Zero,1);
+                }
                 return;
             break;}
             case 0xF0:{//BEQ
-
+                if(P.gBit(Zero)){
+                    cycle++;
+                    PC=adrRelative();
+                }
                 return;
             break;}
             case 0xF8:{//SED
-
+                cycle+=2;
+                P.sBit(Decimal,1);
                 return;
             break;}
             default:{
@@ -266,31 +377,7 @@ void CPU::instruction(){
                 return;
             break;}
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }
     break;
-
     case 1:
         switch(instr.gSmol(2,3)){
             case 0:
@@ -369,9 +456,9 @@ void CPU::instruction(){
                 int8_t a=A-read(address);
                 if(a<0)
                     P.sBit(Negative,1);
-                else if(a>0)
+                else
                     P.sBit(Carry,1);
-                else{
+                if(a==0){
                     P.sBit(Zero,1);
                 }
                 return;

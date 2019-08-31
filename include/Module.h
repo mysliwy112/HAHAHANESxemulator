@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -56,7 +57,7 @@ struct Mem
         byt ^= (-v ^ byt) & (0x1 << i);
     }
     T gSmol(int i, int siz){
-        return (byt >> i) & (2^siz)-1;
+        return (byt >> i) & ((0x2 << siz)-1);
     }
 };
 
