@@ -40,9 +40,9 @@ class CPU : public Module
         long long cycle=0;
 
         //modules
-            ROM *ppu;
-            Module *apu;
-            Module *rom;
+            //PPU *ppu;
+            //APU *apu;
+            ROM *rom;
 
         //registers
             Mem16 PC; //Program Counter

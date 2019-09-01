@@ -5,47 +5,11 @@
 
 #include<CPU.h>
 
-struct iNESstruct{
-    Mem8 PRGOsizeLSB;
-    Mem8 CHROsizeLSB;
-    Mem8 mirroring;
-    Mem8 battery;
-    Mem8 trainer;
-    Mem8 fourScreen;
-
-    Mem8 mapperType;
-    Mem8 submapperType;
-
-    Mem8 consoleType;
-
-    Mem8 PRGOsizeMSB;
-    Mem8 CHROsizeMSB;
-
-    Mem8 PRGAsize;
-    Mem8 EEPROMsize;
-
-    Mem8 CHRAsize;
-    Mem8 CHRNVAsize;
-
-    Mem8 CPPmode;
-
-    Mem8 vsPPUtype;
-    Mem8 vsHWtype;
-
-    Mem8 ExConsoleType;
-
-    Mem8 misROMnumber;
-
-    Mem8 defExDevice;
-};
-
 class ROM : public Module
 {
     public:
         ROM();
         virtual ~ROM();
-
-        ifstream rom;
 
         //iNES
             iNESstruct iNES;
@@ -57,25 +21,11 @@ class ROM : public Module
 
             vector <Mem8> MISrom;
 
-            const char chNES[5]="NES\x1A";
+        virtual Mem8 readCPU(int address);
+        virtual void writeCPU(int address, Mem8 value);
 
-        Mem8 readCPU(int address);
-        void writeCPU(int address, Mem8 value);
-
-        Mem8 readPPU(int address);
-        void writePPU(int address, Mem8 value);
-
-
-        void load(char* path);
-
-        void loadNES();
-
-        void mapper();
-
-
-
-
-
+        virtual Mem8 readPPU(int address);
+        virtual void writePPU(int address, Mem8 value);
 
     protected:
 
