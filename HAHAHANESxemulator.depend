@@ -1,8 +1,7 @@
 # depslib dependency file v1.0
-1567338509 source:e:\cplusplus\hahahanesxemulator\main.cpp
-	<CPU.h>
-	<ROM.h>
-	<ROMloader.h>
+1571494786 source:e:\cplusplus\hahahanesxemulator\main.cpp
+	"Machine.h"
+	"ROMloader.h"
 
 1525812018 e:\lib\sfml-2.5.1-x64\include\sfml\graphics.hpp
 	<SFML/Window.hpp>
@@ -413,33 +412,52 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1566329680 source:e:\cplusplus\hahahanesxemulator\src\module.cpp
+1571494911 source:e:\cplusplus\hahahanesxemulator\src\module.cpp
 	"Module.h"
 
-1567336528 e:\cplusplus\hahahanesxemulator\include\module.h
-	<SFML/Graphics.hpp>
+1571494921 e:\cplusplus\hahahanesxemulator\include\module.h
 	<vector>
 	<iostream>
 	<fstream>
 
-1567337561 source:e:\cplusplus\hahahanesxemulator\src\cpu.cpp
+1571494446 source:e:\cplusplus\hahahanesxemulator\src\cpu.cpp
 	"CPU.h"
+	"Machine.h"
 
-1567334954 e:\cplusplus\hahahanesxemulator\include\cpu.h
+1571487267 e:\cplusplus\hahahanesxemulator\include\cpu.h
 	<Module.h>
 	<ROM.h>
 
 1567337720 source:e:\cplusplus\hahahanesxemulator\src\rom.cpp
 	"ROM.h"
 
-1567337648 e:\cplusplus\hahahanesxemulator\include\rom.h
+1568994994 e:\cplusplus\hahahanesxemulator\include\rom.h
 	<Module.h>
-	<CPU.h>
 
-1567339059 e:\cplusplus\hahahanesxemulator\include\romloader.h
-	<Module.h>
-	<ROM.h>
+1571494853 e:\cplusplus\hahahanesxemulator\include\romloader.h
+	<fstream>
 
-1567338804 source:e:\cplusplus\hahahanesxemulator\src\romloader.cpp
+1571494864 source:e:\cplusplus\hahahanesxemulator\src\romloader.cpp
 	"ROMloader.h"
+	"ROM.h"
+
+1571494055 source:e:\cplusplus\hahahanesxemulator\src\machine.cpp
+	"Machine.h"
+
+1571494763 e:\cplusplus\hahahanesxemulator\include\machine.h
+	<CPU.h>
+	<ROM.h>
+	<IO.h>
+
+1571494501 source:e:\cplusplus\hahahanesxemulator\src\io.cpp
+	"IO.h"
+
+1571492237 e:\cplusplus\hahahanesxemulator\include\io.h
+	"Module.h"
+
+1571492341 source:e:\cplusplus\hahahanesxemulator\src\standardcontroller.cpp
+	"StandardController.h"
+
+1571494077 e:\cplusplus\hahahanesxemulator\include\standardcontroller.h
+	"IO.h"
 

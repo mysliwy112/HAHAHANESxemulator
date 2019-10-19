@@ -1,29 +1,16 @@
 #ifndef ROMLOADER_H
 #define ROMLOADER_H
 
+#include<fstream>
 
-#include<Module.h>
-#include<ROM.h>
+using namespace std;
 
-class ROMloader : Module
+class ROM;
+namespace loader
 {
-    public:
-        ROMloader();
-
-        ROM *load(char* path);
-
-        ROM *loadNES();
-
-        ROM *mapper(int type);
-
-        ifstream file;
-        iNESstruct iNES;
-
-
-
-    protected:
-
-    private:
+    ROM *load(char* path);
+    ROM *loadNES(ifstream &file);
+    ROM *mapper(int type);
 };
 
 #endif // ROMLOADER_H

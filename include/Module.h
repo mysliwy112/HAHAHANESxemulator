@@ -1,8 +1,6 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-#include <SFML/Graphics.hpp>
-
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -67,60 +65,63 @@ using Mem32=Mem<uint32_t>;
 using Mem64=Mem<uint64_t>;
 
 struct iNESstruct{
-            Mem8 PRGOsizeLSB;
-            Mem8 CHROsizeLSB;
-            Mem8 mirroring;
-            Mem8 battery;
-            Mem8 trainer;
-            Mem8 fourScreen;
+    Mem8 PRGOsizeLSB;
+    Mem8 CHROsizeLSB;
+    Mem8 mirroring;
+    Mem8 battery;
+    Mem8 trainer;
+    Mem8 fourScreen;
 
-            Mem8 mapperType;
-            Mem8 submapperType;
+    Mem8 mapperType;
+    Mem8 submapperType;
 
-            Mem8 consoleType;
+    Mem8 consoleType;
 
-            Mem8 PRGOsizeMSB;
-            Mem8 CHROsizeMSB;
+    Mem8 PRGOsizeMSB;
+    Mem8 CHROsizeMSB;
 
-            Mem8 PRGAsize;
-            Mem8 EEPROMsize;
+    Mem8 PRGAsize;
+    Mem8 EEPROMsize;
 
-            Mem8 CHRAsize;
-            Mem8 CHRNVAsize;
+    Mem8 CHRAsize;
+    Mem8 CHRNVAsize;
 
-            Mem8 CPPmode;
+    Mem8 CPPmode;
 
-            Mem8 vsPPUtype;
-            Mem8 vsHWtype;
+    Mem8 vsPPUtype;
+    Mem8 vsHWtype;
 
-            Mem8 ExConsoleType;
+    Mem8 ExConsoleType;
 
-            Mem8 misROMnumber;
+    Mem8 misROMnumber;
 
-            Mem8 defExDevice;
-        };
+    Mem8 defExDevice;
+};
+
+short combine8(uint8_t a, uint8_t b);
+
 
 class Module
 {
     public:
         Module();
 
+
         long long cycle=0;
 
         //virtual void action()=0;
 
-        short combine8(uint8_t a, uint8_t b){
-            return (int(b) << 8) | a;
 
-        }
 
     protected:
 
     private:
 };
 
-class CPU;
+//class CPU;
 //class PPU;
-class ROM;
+//class ROM;
+
+//class Machine;
 
 #endif // MODULE_H

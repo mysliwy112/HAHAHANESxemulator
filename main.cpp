@@ -1,17 +1,20 @@
+#include "Machine.h"
+#include "ROMloader.h"
 
-#include <CPU.h>
-#include <ROM.h>
-#include <ROMloader.h>
 using namespace std;
+
+struct components{
+
+};
+
 
 int main(int argc, char *argv[])
 {
-    cout<<sizeof(iNESstruct)<<endl;
-    ROMloader loader;
-    ROM *aa=loader.load("E:/nestopia/games/a.nes");
+    ROM *rom;
+    rom=loader::load(argv[1]);
 
-    CPU cp;
-    cp.powerUp();
-    delete aa;
+    Machine nesser;
+    nesser.insertROM(rom);
+
     return 0;
 }

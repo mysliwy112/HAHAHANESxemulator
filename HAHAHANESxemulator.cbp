@@ -27,7 +27,7 @@
 				<Option type="1" />
 				<Option compiler="gcc_mingw64" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
@@ -48,14 +48,20 @@
 			<Add directory="E:/lib/SFML-2.5.1-x64/lib" />
 		</Linker>
 		<Unit filename="include/CPU.h" />
+		<Unit filename="include/IO.h" />
+		<Unit filename="include/Machine.h" />
 		<Unit filename="include/Module.h" />
 		<Unit filename="include/ROM.h" />
 		<Unit filename="include/ROMloader.h" />
+		<Unit filename="include/StandardController.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/CPU.cpp" />
+		<Unit filename="src/IO.cpp" />
+		<Unit filename="src/Machine.cpp" />
 		<Unit filename="src/Module.cpp" />
 		<Unit filename="src/ROM.cpp" />
 		<Unit filename="src/ROMloader.cpp" />
+		<Unit filename="src/StandardController.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

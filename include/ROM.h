@@ -3,7 +3,6 @@
 
 #include<Module.h>
 
-#include<CPU.h>
 
 class ROM : public Module
 {

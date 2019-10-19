@@ -1,8 +1,9 @@
 #include "CPU.h"
+#include "Machine.h"
 
 CPU::CPU()
 {
-    //ctor
+    memory.resize(0x4020);
 }
 void CPU::powerUp(){
     PC=0xFFFD;
@@ -20,18 +21,51 @@ void CPU::reset(){
     SP-=3;
 }
 
+void CPU::setMachine(Machine *mach){
+    mod=mach;
+}
+
+void CPU::toIO(int address, uint8_t value){
+    memory[address]=value;
+    if(address==0x4016){
+        mod->IOsig.PAD1=memory[0x4016];
+        mod->IOsig.OUT0=memory[address].gBit(0);
+        mod->IOsig.OUT1=memory[address].gBit(1);
+        mod->IOsig.OUT2=memory[address].gBit(2);
+        mod->toIO();
+    }else{
+        mod->IOsig.PAD2=memory[0x4017];
+    }
+}
+
+Mem8 CPU::fromIO(int address){
+    bool contr;
+    if(address==0x4016){
+        contr=0;
+    }else{
+        contr=1;
+    }
+    Mem8 from=mod->fromIO(contr);
+    for(int i=0;i<5;i++){
+        memory[address].sBit(i,from.gBit(i));
+    }
+    return memory[address];
+}
+
 Mem8 CPU::read(int address){
     if(address<0x2000){ //zero page, stack, ram
         return memory[address%0x800];
     }else if(address<0x4000){//PPU registers
-        return memory[(address-0x2000)%0x8+0x2000];
-    }else if(address<0x4018){//APU registers
-        return memory[address];
+//        return fromPPU((address-0x2000)%0x8+0x2000);
+    }else if(address<0x4016){//APU registers
+//        return fromAPU(address);
+    }else if(address<0x4018){//I/O registers
+        return fromIO(address);
     }else if(address<0x4020){//APU test registers
         return memory[address];
     }else if(address<0x10000){//ROM
         //return memory[address];
-        return rom->readCPU(address);
+        return mod->rom->readCPU(address);
     }else if(address==0x10001){
         return A;
     }
@@ -41,13 +75,15 @@ void CPU::write(int address, uint8_t value){
     if(address<0x2000){ //zero page, stack, ram
         memory[address%0x800]=value;
     }else if(address<0x4000){//PPU registers
-        memory[(address-0x2000)%0x8+0x2000]=value;
-    }else if(address<0x4018){//APU registers
-        memory[address]=value;
+//        toPPU((address-0x2000)%0x8+0x2000,value);
+    }else if(address<0x4016){//APU registers
+ //       toAPU(address,value);
+    }else if(address<0x4018){//I/O registers
+        toIO(address,value);
     }else if(address<0x4020){//APU test registers
         memory[address]=value;
     }else if(address<0x10000){//ROM
-        rom->writeCPU(address,value);
+        mod->rom->writeCPU(address,value);
     }else if(address==0x10001){
         A=value;
     }
@@ -60,7 +96,6 @@ void CPU::push(int value){
 Mem8 CPU::pull(){
     return read(++SP+0x100);
 }
-
 
 void CPU::action(){
     instruction();

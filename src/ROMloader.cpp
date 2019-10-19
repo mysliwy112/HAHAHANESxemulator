@@ -1,11 +1,8 @@
 #include "ROMloader.h"
+#include "ROM.h"
 
-ROMloader::ROMloader()
-{
-    //ctor
-}
-
-ROM *ROMloader::load(char* path){
+ROM *loader::load(char* path){
+    ifstream file;
     file.open(path,ios::binary);
     if(!file.good()){
         cout<<"Can't load file: "<<path<<endl;
@@ -16,8 +13,7 @@ ROM *ROMloader::load(char* path){
     string chNES("NES\x1A");
     file.read(type,4);
     if(chNES.compare(type)==0){
-        file.close();
-        return loadNES();
+        return loadNES(file);
     }else{
         cout<<"Unsupported file format: "<<type<<endl;
     }
@@ -25,9 +21,13 @@ ROM *ROMloader::load(char* path){
     return NULL;
 }
 
-ROM *ROMloader::loadNES(){
+ROM *loader::loadNES(ifstream &file){
+
+    iNESstruct iNES;
+
     Mem8 header[16];
-    file.read((char*)header, 12);
+    file.seekg(0, file.beg);
+    file.read((char*)header, 16);
 
     bool NES2;
     if (header[7].gSmol(1,2)==2){
@@ -97,17 +97,13 @@ ROM *ROMloader::loadNES(){
         //ignore biatch
         //iNES.TVtype=header[10].gBit(0);
     }
-    bool dbg=1;
-    if(dbg){
-
-
-    }
 
     ROM *rom=mapper(iNES.mapperType);
 
     rom->iNES=iNES;
 
     if(iNES.trainer==1){
+        cout<<"Watch out for trainer"<<endl;
         char buffer[512];
         rom->trainer.resize(512);
         file.read(buffer,512);
@@ -152,7 +148,7 @@ ROM *ROMloader::loadNES(){
     return rom;
 }
 
-ROM *ROMloader::mapper(int type){
+ROM *loader::mapper(int type){
 
     switch(type){
         case 0:{
@@ -162,4 +158,3 @@ ROM *ROMloader::mapper(int type){
     }
 
 }
-
