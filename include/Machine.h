@@ -41,9 +41,13 @@ class Machine
         //signals
             IOsignals IOsig;
 
+        bool on;
+
         void powerUP();
         void reset();
         void insertROM(ROM *rom);
+
+        void step();
 
         void toIO();
         Mem8 fromIO(bool pad);

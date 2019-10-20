@@ -53,6 +53,8 @@
 		<Unit filename="include/Module.h" />
 		<Unit filename="include/ROM.h" />
 		<Unit filename="include/ROMloader.h" />
+		<Unit filename="include/RealController.h" />
+		<Unit filename="include/Screen.h" />
 		<Unit filename="include/StandardController.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/CPU.cpp" />
@@ -61,6 +63,8 @@
 		<Unit filename="src/Module.cpp" />
 		<Unit filename="src/ROM.cpp" />
 		<Unit filename="src/ROMloader.cpp" />
+		<Unit filename="src/RealController.cpp" />
+		<Unit filename="src/Screen.cpp" />
 		<Unit filename="src/StandardController.cpp" />
 		<Extensions>
 			<code_completion />

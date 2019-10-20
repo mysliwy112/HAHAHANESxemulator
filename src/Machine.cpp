@@ -2,6 +2,7 @@
 
 Machine::Machine()
 {
+    on=false;
     cpu.setMachine(this);
 }
 
@@ -16,12 +17,20 @@ void Machine::insertROM(ROM *rom){
 
 void Machine::powerUP()
 {
-
+    cpu.powerUp();
+    on=true;
 }
 
 void Machine::reset()
 {
+    if(on==true){
+        cpu.reset();
+    }
+}
 
+void Machine::step()
+{
+    cpu.action();
 }
 
 void Machine::toIO()
@@ -39,9 +48,6 @@ Mem8 Machine::fromIO(bool pad)
         in=pad2->write();
     return 0;
 }
-
-
-
 
 void Machine::plugController(int port, IO *contr){
     switch(port){
