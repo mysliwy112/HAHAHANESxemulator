@@ -40,9 +40,6 @@ class CPU : public Module
         long long cycle=0;
 
         //modules
-            //PPU *ppu;
-            //APU *apu;
-            //ROM *rom;
             Machine *mod;
 
         //registers
@@ -55,7 +52,7 @@ class CPU : public Module
 
         vector<Mem8> memory;
 
-        void setMachine(Machine *mach);
+
 
 
         virtual void action();
@@ -63,11 +60,11 @@ class CPU : public Module
         void reset();
 
         Mem8 read(int address);
-        void write(int address, uint8_t value);
+        void write(int address, Mem8 value);
 
-        void toPPU(int adress, uint8_t value);
-        void toAPU(int adress, uint8_t value);
-        void toIO(int adress, uint8_t value);
+        void toPPU(int adress, Mem8 value);
+        void toAPU(int adress, Mem8 value);
+        void toIO(int adress, Mem8 value);
 
         Mem8 fromPPU(int adress);
         Mem8 fromAPU(int adress);
@@ -114,34 +111,44 @@ class CPU : public Module
                 return static_cast<int>(read(PC++))+PC;
             }
             int adrAbsolute(){
-                //relative? 4
+                cycle+=4;
                 return combine8(read(PC++),read(PC++));
             }
             int adrAbsoluteX(){
-                //add cycle
                 cycle+=4;
-                return combine8(read(PC++),read(PC++))+X;
+                int address=combine8(read(PC++),read(PC++))+X;
+                if(address>255){
+                    cycle++;
+                }
+                return address;
             }
             int adrAbsoluteY(){
-                //add cycle
                 cycle+=4;
-                return combine8(read(PC++),read(PC++))+Y;
+                int address=combine8(read(PC++),read(PC++))+Y;
+                if(address>255){
+                    cycle++;
+                }
+                return address;
             }
             int adrIndirect(){
-                //+5 only JMP
+                cycle+=5;
                 int address=combine8(read(PC++),read(PC++));
                 return combine8(read(address),read(address+1));
             }
             int adrIndirectX(){
                 cycle+=6;
                 int address=PC+++X;
-                return read(combine8(read(address%256),read((address+1)%256)));
+                address=combine8(read(address%256),read((address+1)%256));
+                return address;
             }
             int adrIndirectY(){
-                //add cycle
                 cycle+=5;
                 int address=PC++;
-                return read(combine8(read(address),read((address+1)%256))+Y);
+                address=combine8(read(address),read((address+1)%256))+Y;
+                if(address>255){
+                    cycle++;
+                }
+                return address;
             }
 
         //special instructions

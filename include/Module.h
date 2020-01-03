@@ -6,6 +6,7 @@
 #include <fstream>
 
 using namespace std;
+class Machine;
 
 template<class T>
 struct Mem
@@ -15,39 +16,49 @@ struct Mem
 
     T byt;
 
-    Mem& operator=(T a) {
-        byt = a;
+//    Mem& operator=(Mem& a) {
+//        cout<<int(a)<<endl;
+//        byt = a.byt;
+//        return *this;
+//    }
+
+    template <class T2>
+    Mem<T>& operator=( const Mem<T2>& number )
+    {
+        byt = number.byt;
         return *this;
     }
 
-    Mem& operator+=(T a) {
-        byt+=a;
-        return *this;
-    }
-    Mem& operator-=(T a) {
-        byt-=a;
-        return *this;
-    }
+//    Mem& operator+=(T a) {
+//        byt+=a;
+//        return *this;
+//    }
+//    Mem& operator-=(T a) {
+//        byt-=a;
+//        return *this;
+//    }
+//
+//    T operator--(int) {
+//        T temp=byt--;
+//        return temp;
+//    }
+//    T operator--() {
+//        return --byt;
+//    }
+//    T operator++(int) {
+//        T temp=byt++;
+//        return temp;
+//    }
+//    T operator++() {
+//        return ++byt;
+//    }
 
-    T& operator--(int) {
-        T temp=byt--;
-        return temp;
-    }
-    T& operator--() {
-        return --byt;
-    }
-    T& operator++(int) {
-        T temp=byt++;
-        return temp;
-    }
-    T& operator++() {
-        return ++byt;
-    }
-
-    operator T(){
+    operator T ()const{
         return byt;
     }
-
+    operator T&(){
+        return byt;
+    }
     bool gBit(int i){
         return (byt >> i) & 0x1;
     }
@@ -106,11 +117,11 @@ class Module
     public:
         Module();
 
-
+        Machine *mod;
         long long cycle=0;
 
         //virtual void action()=0;
-
+        void setMachine(Machine *mach);
 
 
     protected:

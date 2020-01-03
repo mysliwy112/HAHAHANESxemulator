@@ -51,6 +51,7 @@
 		<Unit filename="include/IO.h" />
 		<Unit filename="include/Machine.h" />
 		<Unit filename="include/Module.h" />
+		<Unit filename="include/PPU.h" />
 		<Unit filename="include/ROM.h" />
 		<Unit filename="include/ROMloader.h" />
 		<Unit filename="include/RealController.h" />
@@ -61,6 +62,7 @@
 		<Unit filename="src/IO.cpp" />
 		<Unit filename="src/Machine.cpp" />
 		<Unit filename="src/Module.cpp" />
+		<Unit filename="src/PPU.cpp" />
 		<Unit filename="src/ROM.cpp" />
 		<Unit filename="src/ROMloader.cpp" />
 		<Unit filename="src/RealController.cpp" />

@@ -1,9 +1,14 @@
 #include "Machine.h"
+#include "StandardController.h"
 
 Machine::Machine()
 {
     on=false;
     cpu.setMachine(this);
+    ppu.setMachine(this);
+    expansion=nullptr;
+    pad1=new StandardController;
+    pad2=new IO;
 }
 
 Machine::~Machine()
@@ -30,7 +35,11 @@ void Machine::reset()
 
 void Machine::step()
 {
-    cpu.action();
+    if(on==true){
+        cpu.action();
+    }else{
+        throw "Machine not launched.";
+    }
 }
 
 void Machine::toIO()

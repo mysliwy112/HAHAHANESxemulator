@@ -10,11 +10,6 @@ void IO::OUTsignal(bool out)
 
 }
 
-void IO::read(Mem8 in)
-{
-
-}
-
 Mem8 IO::write()
 {
     return 0;

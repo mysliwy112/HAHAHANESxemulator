@@ -21,11 +21,7 @@ void CPU::reset(){
     SP-=3;
 }
 
-void CPU::setMachine(Machine *mach){
-    mod=mach;
-}
-
-void CPU::toIO(int address, uint8_t value){
+void CPU::toIO(int address, Mem8 value){
     memory[address]=value;
     if(address==0x4016){
         mod->IOsig.PAD1=memory[0x4016];
@@ -34,7 +30,11 @@ void CPU::toIO(int address, uint8_t value){
         mod->IOsig.OUT2=memory[address].gBit(2);
         mod->toIO();
     }else{
-        mod->IOsig.PAD2=memory[0x4017];
+
+        //mod->IOsig.PAD2=memory[0x4017];
+        cout<<int(memory[address])<<endl;
+        mod->IOsig.PAD2=value;
+        cout<<int(mod->IOsig.PAD2)<<endl;
     }
 }
 
@@ -64,20 +64,20 @@ Mem8 CPU::read(int address){
     }else if(address<0x4020){//APU test registers
         return memory[address];
     }else if(address<0x10000){//ROM
-        //return memory[address];
         return mod->rom->readCPU(address);
     }else if(address==0x10001){
         return A;
     }
+    throw "Out of range";
 }
 
-void CPU::write(int address, uint8_t value){
+void CPU::write(int address, Mem8 value){
     if(address<0x2000){ //zero page, stack, ram
         memory[address%0x800]=value;
     }else if(address<0x4000){//PPU registers
 //        toPPU((address-0x2000)%0x8+0x2000,value);
     }else if(address<0x4016){//APU registers
- //       toAPU(address,value);
+//        toAPU(address,value);
     }else if(address<0x4018){//I/O registers
         toIO(address,value);
     }else if(address<0x4020){//APU test registers
@@ -87,6 +87,7 @@ void CPU::write(int address, uint8_t value){
     }else if(address==0x10001){
         A=value;
     }
+    throw "Out of range";
 }
 
 void CPU::push(int value){
@@ -103,8 +104,11 @@ void CPU::action(){
 }
 
 void CPU::instruction(){
+    cout<<PC<<endl;
+    cout<<read(PC)<<endl;
     Mem8 instr(read(PC++));
     int address=0;
+    cout<<instr<<endl;
 
     switch(instr.gSmol(0,2)){
     case 0x0:
@@ -137,7 +141,12 @@ void CPU::instruction(){
                 return;
             break;}
             case 0x24:{//BIT
-
+                Mem8 val=read(adrZero());
+                if((A&val)==0){
+                    setZero(1);
+                }
+                P.sBit(flag::Overflow,val.gBit(6));
+                setNegative(val.gBit(7));
                 return;
             break;}
             case 0x28:{//PLP
@@ -146,10 +155,15 @@ void CPU::instruction(){
                 return;
             break;}
             case 0x2C:{//BIT
-
+                Mem8 val=read(adrAbsolute());
+                if((A&val)==0){
+                    setZero(1);
+                }
+                P.sBit(flag::Overflow,val.gBit(6));
+                setNegative(val.gBit(7));
                 return;
             break;}
-            case 0x30:{//BMI //add cycle
+            case 0x30:{//BMI
                 cycle+=2;
                 if(P.gBit(Negative)){
                     cycle++;
@@ -172,12 +186,12 @@ void CPU::instruction(){
                 push(A);
                 return;
             break;}
-            case 0x4C:{//JMP //add cycles
-                cycle+=3;
+            case 0x4C:{//JMP
+                cycle-=1;
                 PC=adrAbsolute();
                 return;
             break;}
-            case 0x50:{//BVC //add cycles
+            case 0x50:{//BVC
                 if(!P.gBit(Overflow)){
                     cycle++;
                     PC=adrRelative();
@@ -189,9 +203,9 @@ void CPU::instruction(){
                 P.sBit(InterruptDis,0);
                 return;
             break;}
-            case 0x60:{//RTS //minus one?
+            case 0x60:{//RTS //plus one?
                 cycle+=6;
-                PC=pull();
+                PC=pull()-1;
                 return;
             break;}
             case 0x68:{//PLA
@@ -202,11 +216,10 @@ void CPU::instruction(){
                 return;
             break;}
             case 0xC:{//JMP
-                cycle+=5;
                 PC=adrIndirect();
                 return;
             break;}
-            case 0x70:{//BVS //add cycles
+            case 0x70:{//BVS
                 if(P.gBit(Overflow)){
                     cycle++;
                     PC=adrRelative();
@@ -233,7 +246,7 @@ void CPU::instruction(){
                 write(adrAbsolute(),Y);
                 return;
             break;}
-            case 0x90:{//BCC //add cycles
+            case 0x90:{//BCC
                 if(P.gBit(Carry)){
                     cycle++;
                     PC=adrRelative();
@@ -280,7 +293,7 @@ void CPU::instruction(){
                 setNegative(Y);
                 return;
             break;}
-            case 0xB0:{//BCS //add cycles
+            case 0xB0:{//BCS
                 if(!P.gBit(Carry)){
                     cycle++;
                     PC=adrRelative();
@@ -344,7 +357,7 @@ void CPU::instruction(){
                 }
                 return;
             break;}
-            case 0xD0:{//BNE //add cycle
+            case 0xD0:{//BNE
                 if(!P.gBit(Zero)){
                     cycle++;
                     PC=adrRelative();

@@ -156,5 +156,5 @@ ROM *loader::mapper(int type){
             return rom;
         break;}
     }
-
+    throw "Mapper type not found.";
 }

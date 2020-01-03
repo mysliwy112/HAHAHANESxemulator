@@ -1,27 +1,17 @@
 #ifndef MACHINE_H
 #define MACHINE_H
 
-#include<CPU.h>
 #include<ROM.h>
-#include<IO.h>
+#include<CPU.h>
+#include<PPU.h>
 //#include<APU.h>
-//#include<PPU.h>
+#include<IO.h>
+
 
 
 
 class Machine
 {
-    struct IOsignals{
-        bool OUT0;
-        bool OUT1;
-        bool OUT2;
-        bool OE1;
-        bool OE2;
-        Mem8 PAD1;
-        Mem8 PAD2;
-
-    };
-
     public:
 
         Machine();
@@ -30,7 +20,7 @@ class Machine
         //components
             ROM *rom;
             CPU cpu;
-            //PPU *ppu;
+            PPU ppu;
             //APU *apu;
 
         //pads
@@ -39,7 +29,16 @@ class Machine
             IO *pad2;
 
         //signals
-            IOsignals IOsig;
+            struct IOsignals{
+                bool OUT0;
+                bool OUT1;
+                bool OUT2;
+                bool OE1;
+                bool OE2;
+                Mem8 PAD1;
+                Mem8 PAD2;
+
+            }IOsig;
 
         bool on;
 
