@@ -53,8 +53,10 @@ Mem8 CPU::read(int address){
         return memory[address%0x800];
     }else if(address<0x4000){//PPU registers
 //        return fromPPU((address-0x2000)%0x8+0x2000);
+        throw "Can't find memory module.";
     }else if(address<0x4016){//APU registers
 //        return fromAPU(address);
+        throw "Can't find memory module.";
     }else if(address<0x4018){//I/O registers
         return fromIO(address);
     }else if(address<0x4020){//APU test registers
@@ -72,8 +74,10 @@ void CPU::write(int address, Mem8 value){
         memory[address%0x800]=value;
     }else if(address<0x4000){//PPU registers
 //        toPPU((address-0x2000)%0x8+0x2000,value);
+        throw "Can't find memory module.";
     }else if(address<0x4016){//APU registers
 //        toAPU(address,value);
+        throw "Can't find memory module.";
     }else if(address<0x4018){//I/O registers
         toIO(address,value);
     }else if(address<0x4020){//APU test registers

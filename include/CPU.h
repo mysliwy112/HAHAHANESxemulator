@@ -40,7 +40,6 @@ class CPU : public Module
         long long cycle=0;
 
         //modules
-            Machine *mod;
 
         //registers
             Mem16 PC; //Program Counter
