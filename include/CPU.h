@@ -78,11 +78,11 @@ class CPU : public Module
         Mem8 pull();
 
         void setNegative(Mem8 num){
-            P.sBit(Negative,num.gBit(Negative));
+            sBit(P,Negative,gBit(num,Negative));
         }
 
         void setZero(Mem8 num){
-            P.sBit(Zero,!num);
+            sBit(P,Zero,!num);
         }
 
         //addressing modes

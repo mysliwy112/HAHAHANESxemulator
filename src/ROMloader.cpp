@@ -30,44 +30,44 @@ ROM *loader::loadNES(ifstream &file){
     file.read((char*)header, 16);
 
     bool NES2;
-    if (header[7].gSmol(1,2)==2){
+    if (gSmol(header[7],1,2)==2){
         NES2=true;
         cout<<"NES 2.0 format"<<endl;
         iNES.PRGOsizeLSB=header[4];
         iNES.CHROsizeLSB=header[5];
-        iNES.mirroring=header[6].gBit(0);
-        iNES.battery=header[6].gBit(1);
-        iNES.trainer=header[6].gBit(2);
-        iNES.fourScreen=header[6].gBit(3);
-        iNES.mapperType=header[6].gSmol(4,4);
+        iNES.mirroring=gBit(header[6],0);
+        iNES.battery=gBit(header[6],1);
+        iNES.trainer=gBit(header[6],2);
+        iNES.fourScreen=gBit(header[6],3);
+        iNES.mapperType=gSmol(header[6],4,4);
 
-        iNES.consoleType=header[7].gSmol(0,2);
-        iNES.mapperType+=header[7].gSmol(4,4)*0xF;
+        iNES.consoleType=gSmol(header[7],0,2);
+        iNES.mapperType+=gSmol(header[7],4,4)*0xF;
 
-        iNES.mapperType+=header[8].gSmol(0,4)*0xFF;
-        iNES.submapperType=header[8].gSmol(4,4);
+        iNES.mapperType+=gSmol(header[8],0,4)*0xFF;
+        iNES.submapperType=gSmol(header[8],4,4);
 
-        iNES.PRGOsizeMSB=header[9].gSmol(0,4);
-        iNES.CHROsizeMSB=header[9].gSmol(4,4);
+        iNES.PRGOsizeMSB=gSmol(header[9],0,4);
+        iNES.CHROsizeMSB=gSmol(header[9],4,4);
 
-        iNES.PRGAsize=header[10].gSmol(0,4);
-        iNES.EEPROMsize=header[10].gSmol(4,4);
+        iNES.PRGAsize=gSmol(header[10],0,4);
+        iNES.EEPROMsize=gSmol(header[10],4,4);
 
-        iNES.CHRAsize=header[11].gSmol(0,4);
-        iNES.CHRNVAsize=header[11].gSmol(4,4);
+        iNES.CHRAsize=gSmol(header[11],0,4);
+        iNES.CHRNVAsize=gSmol(header[11],4,4);
 
-        iNES.CPPmode=header[12].gSmol(0,2);
+        iNES.CPPmode=gSmol(header[12],0,2);
 
         if(iNES.consoleType==1){
-            iNES.vsPPUtype=header[13].gSmol(0,4);
-            iNES.vsHWtype=header[13].gSmol(4,4);
+            iNES.vsPPUtype=gSmol(header[13],0,4);
+            iNES.vsHWtype=gSmol(header[13],4,4);
         }else if(iNES.consoleType==3){
-            iNES.ExConsoleType=header[13].gSmol(0,4);
+            iNES.ExConsoleType=gSmol(header[13],0,4);
         }
 
-        iNES.misROMnumber=header[14].gSmol(0,2);
+        iNES.misROMnumber=gSmol(header[14],0,2);
 
-        iNES.defExDevice=header[15].gSmol(0,6);
+        iNES.defExDevice=gSmol(header[15],0,6);
     }else{
         NES2=false;
         cout<<"iNES format"<<endl;
@@ -76,26 +76,26 @@ ROM *loader::loadNES(ifstream &file){
         iNES.CHROsizeLSB=header[5];
         iNES.CHROsizeMSB=0;
 
-        iNES.mirroring=header[6].gBit(0);
-        iNES.battery=header[6].gBit(1);
-        iNES.trainer=header[6].gBit(2);
-        iNES.fourScreen=header[6].gBit(3);
-        iNES.mapperType=header[6].gSmol(4,4);
+        iNES.mirroring=gBit(header[6],0);
+        iNES.battery=gBit(header[6],1);
+        iNES.trainer=gBit(header[6],2);
+        iNES.fourScreen=gBit(header[6],3);
+        iNES.mapperType=gSmol(header[6],4,4);
 
         iNES.consoleType=0;
-        if(header[7].gBit(0))
+        if(gBit(header[7],0))
             iNES.consoleType=1;
-        else if(header[7].gBit(1)){
+        else if(gBit(header[7],1)){
             iNES.consoleType=2;
         }
-        iNES.mapperType+=header[7].gSmol(4,4)*0xF;
+        iNES.mapperType+=gSmol(header[7],4,4)*0xF;
 
         iNES.PRGAsize=header[8];
 
-        iNES.CPPmode=header[9].gBit(0);
+        iNES.CPPmode=gBit(header[9],0);
 
         //ignore biatch
-        //iNES.TVtype=header[10].gBit(0);
+        //iNES.TVtype=gBit(header[10],0);
     }
 
     ROM *rom=mapper(iNES.mapperType);
@@ -112,8 +112,8 @@ ROM *loader::loadNES(ifstream &file){
 
     long long PRGOsize=0;
     if(iNES.PRGOsizeMSB==0xF){
-        int multi=iNES.PRGOsizeLSB.gSmol(0,2)*2+1;
-        PRGOsize=(2 << iNES.PRGOsizeLSB.gSmol(2,6))*multi;
+        int multi=gSmol(iNES.PRGOsizeLSB,0,2)*2+1;
+        PRGOsize=(2 << gSmol(iNES.PRGOsizeLSB,2,6))*multi;
     }else{
         PRGOsize=combine8(iNES.PRGOsizeLSB,iNES.PRGOsizeMSB)*16384;
     }
@@ -124,8 +124,8 @@ ROM *loader::loadNES(ifstream &file){
 
     long long CHROsize=0;
     if(iNES.CHROsizeMSB==0xF){
-        int multi=iNES.CHROsizeLSB.gSmol(0,2)*2+1;
-        CHROsize=(2 << iNES.CHROsizeLSB.gSmol(2,6))*multi;
+        int multi=gSmol(iNES.CHROsizeLSB,0,2)*2+1;
+        CHROsize=(2 << gSmol(iNES.CHROsizeLSB,2,6))*multi;
     }else{
         CHROsize=combine8(iNES.CHROsizeLSB,iNES.CHROsizeMSB)*16384;
     }

@@ -9,71 +9,21 @@ using namespace std;
 class Machine;
 
 template<class T>
-struct Mem
-{
-    Mem(){}
-    Mem(T u):byt(u){}
-
-    T byt;
-
-//    Mem& operator=(Mem& a) {
-//        cout<<int(a)<<endl;
-//        byt = a.byt;
-//        return *this;
-//    }
-
-    template <class T2>
-    Mem<T>& operator=( const Mem<T2>& number )
-    {
-        byt = number.byt;
-        return *this;
-    }
-
-//    Mem& operator+=(T a) {
-//        byt+=a;
-//        return *this;
-//    }
-//    Mem& operator-=(T a) {
-//        byt-=a;
-//        return *this;
-//    }
-//
-//    T operator--(int) {
-//        T temp=byt--;
-//        return temp;
-//    }
-//    T operator--() {
-//        return --byt;
-//    }
-//    T operator++(int) {
-//        T temp=byt++;
-//        return temp;
-//    }
-//    T operator++() {
-//        return ++byt;
-//    }
-
-    operator T ()const{
-        return byt;
-    }
-    operator T&(){
-        return byt;
-    }
-    bool gBit(int i){
-        return (byt >> i) & 0x1;
-    }
-    void sBit(int i,bool v){
-        byt ^= (-v ^ byt) & (0x1 << i);
-    }
-    T gSmol(int i, int siz){
-        return (byt >> i) & ((0x2 << siz)-1);
-    }
-};
-
-using Mem8=Mem<uint8_t>;
-using Mem16=Mem<uint16_t>;
-using Mem32=Mem<uint32_t>;
-using Mem64=Mem<uint64_t>;
+bool gBit(T &byt,int i){
+    return (byt >> i) & 0x1;
+}
+template<class T>
+void sBit(T &byt, int i,bool v){
+    byt ^= (-v ^ byt) & (0x1 << i);
+}
+template<class T>
+T gSmol(T &byt,int i, int siz){
+    return (byt >> i) & ((0x2 << siz)-1);
+}
+typedef uint8_t Mem8;
+typedef uint16_t Mem16;
+typedef uint32_t Mem32;
+typedef uint64_t Mem64;
 
 struct iNESstruct{
     Mem8 PRGOsizeLSB;

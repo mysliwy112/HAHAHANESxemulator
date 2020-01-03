@@ -39,7 +39,6 @@ class Machine
                 Mem8 PAD2;
 
             }IOsig;
-
         bool on;
 
         void powerUP();

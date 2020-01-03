@@ -25,16 +25,12 @@ void CPU::toIO(int address, Mem8 value){
     memory[address]=value;
     if(address==0x4016){
         mod->IOsig.PAD1=memory[0x4016];
-        mod->IOsig.OUT0=memory[address].gBit(0);
-        mod->IOsig.OUT1=memory[address].gBit(1);
-        mod->IOsig.OUT2=memory[address].gBit(2);
+        mod->IOsig.OUT0=gBit(memory[address],0);
+        mod->IOsig.OUT1=gBit(memory[address],1);
+        mod->IOsig.OUT2=gBit(memory[address],2);
         mod->toIO();
     }else{
-
-        //mod->IOsig.PAD2=memory[0x4017];
-        cout<<int(memory[address])<<endl;
-        mod->IOsig.PAD2=value;
-        cout<<int(mod->IOsig.PAD2)<<endl;
+        mod->IOsig.PAD2=memory[0x4017];
     }
 }
 
@@ -47,7 +43,7 @@ Mem8 CPU::fromIO(int address){
     }
     Mem8 from=mod->fromIO(contr);
     for(int i=0;i<5;i++){
-        memory[address].sBit(i,from.gBit(i));
+        sBit(memory[address],i,gBit(from,i));
     }
     return memory[address];
 }
@@ -110,7 +106,7 @@ void CPU::instruction(){
     int address=0;
     cout<<instr<<endl;
 
-    switch(instr.gSmol(0,2)){
+    switch(gSmol(instr,0,2)){
     case 0x0:
         switch(instr){
             case 0x0:{//BRK
@@ -123,7 +119,7 @@ void CPU::instruction(){
             break;}
             case 0x10:{//BPL //add cycle
                 cycle+=2;
-                if(!P.gBit(Negative)){
+                if(!gBit(P,Negative)){
                     cycle++;
                     PC=adrRelative();
                 }
@@ -131,7 +127,7 @@ void CPU::instruction(){
             break;}
             case 0x18:{//CLC
                 cycle+=2;
-                P.sBit(Carry,0);
+                sBit(P,Carry,0);
                 return;
             break;}
             case 0x20:{//JSR //check
@@ -145,8 +141,8 @@ void CPU::instruction(){
                 if((A&val)==0){
                     setZero(1);
                 }
-                P.sBit(flag::Overflow,val.gBit(6));
-                setNegative(val.gBit(7));
+                sBit(P,flag::Overflow,gBit(val,6));
+                setNegative(gBit(val,7));
                 return;
             break;}
             case 0x28:{//PLP
@@ -159,20 +155,20 @@ void CPU::instruction(){
                 if((A&val)==0){
                     setZero(1);
                 }
-                P.sBit(flag::Overflow,val.gBit(6));
-                setNegative(val.gBit(7));
+                sBit(P,flag::Overflow,gBit(val,6));
+                setNegative(gBit(val,7));
                 return;
             break;}
             case 0x30:{//BMI
                 cycle+=2;
-                if(P.gBit(Negative)){
+                if(gBit(P,Negative)){
                     cycle++;
                     PC=adrRelative();
                 }
                 return;
             break;}
             case 0x38:{//SEC
-                P.sBit(Carry,1);
+                sBit(P,Carry,1);
                 return;
             break;}
             case 0x40:{//RTI
@@ -192,7 +188,7 @@ void CPU::instruction(){
                 return;
             break;}
             case 0x50:{//BVC
-                if(!P.gBit(Overflow)){
+                if(!gBit(P,Overflow)){
                     cycle++;
                     PC=adrRelative();
                 }
@@ -200,7 +196,7 @@ void CPU::instruction(){
             break;}
             case 0x58:{//CLI
                 cycle+=2;
-                P.sBit(InterruptDis,0);
+                sBit(P,InterruptDis,0);
                 return;
             break;}
             case 0x60:{//RTS //plus one?
@@ -220,7 +216,7 @@ void CPU::instruction(){
                 return;
             break;}
             case 0x70:{//BVS
-                if(P.gBit(Overflow)){
+                if(gBit(P,Overflow)){
                     cycle++;
                     PC=adrRelative();
                 }
@@ -228,7 +224,7 @@ void CPU::instruction(){
             break;}
             case 0x78:{//SEI
                 cycle+=2;
-                P.sBit(InterruptDis,1);
+                sBit(P,InterruptDis,1);
                 return;
             break;}
             case 0x84:{//STY
@@ -247,7 +243,7 @@ void CPU::instruction(){
                 return;
             break;}
             case 0x90:{//BCC
-                if(P.gBit(Carry)){
+                if(gBit(P,Carry)){
                     cycle++;
                     PC=adrRelative();
                 }
@@ -294,7 +290,7 @@ void CPU::instruction(){
                 return;
             break;}
             case 0xB0:{//BCS
-                if(!P.gBit(Carry)){
+                if(!gBit(P,Carry)){
                     cycle++;
                     PC=adrRelative();
                 }
@@ -308,7 +304,7 @@ void CPU::instruction(){
             break;}
             case 0xB8:{//CLV
                 cycle+=2;
-                P.sBit(Overflow,0);
+                sBit(P,Overflow,0);
                 return;
             break;}
             case 0xBC:{//LDY
@@ -320,22 +316,22 @@ void CPU::instruction(){
             case 0xC0:{//CPY
                 int8_t y=Y-read(adrImmediate());
                 if(y<0)
-                    P.sBit(Negative,1);
+                    sBit(P,Negative,1);
                 else
-                    P.sBit(Carry,1);
+                    sBit(P,Carry,1);
                 if(y==0){
-                    P.sBit(Zero,1);
+                    sBit(P,Zero,1);
                 }
                 return;
             break;}
             case 0xC4:{//CPY
                 int8_t y=Y-read(adrZero());
                 if(y<0)
-                    P.sBit(Negative,1);
+                    sBit(P,Negative,1);
                 else
-                    P.sBit(Carry,1);
+                    sBit(P,Carry,1);
                 if(y==0){
-                    P.sBit(Zero,1);
+                    sBit(P,Zero,1);
                 }
                 return;
             break;}
@@ -349,16 +345,16 @@ void CPU::instruction(){
             case 0xCC:{//CPY
                 int8_t y=Y-read(adrAbsolute());
                 if(y<0)
-                    P.sBit(Negative,1);
+                    sBit(P,Negative,1);
                 else
-                    P.sBit(Carry,1);
+                    sBit(P,Carry,1);
                 if(y==0){
-                    P.sBit(Zero,1);
+                    sBit(P,Zero,1);
                 }
                 return;
             break;}
             case 0xD0:{//BNE
-                if(!P.gBit(Zero)){
+                if(!gBit(P,Zero)){
                     cycle++;
                     PC=adrRelative();
                 }
@@ -366,28 +362,28 @@ void CPU::instruction(){
             break;}
             case 0xD8:{//CLD
                 cycle+=2;
-                P.sBit(Decimal,0);
+                sBit(P,Decimal,0);
                 return;
             break;}
             case 0xE0:{//CPX
                 int8_t x=X-read(adrImmediate());
                 if(x<0)
-                    P.sBit(Negative,1);
+                    sBit(P,Negative,1);
                 else
-                    P.sBit(Carry,1);
+                    sBit(P,Carry,1);
                 if(x==0){
-                    P.sBit(Zero,1);
+                    sBit(P,Zero,1);
                 }
                 return;
             break;}
             case 0xE4:{//CPX
                 int8_t x=X-read(adrZero());
                 if(x<0)
-                    P.sBit(Negative,1);
+                    sBit(P,Negative,1);
                 else
-                    P.sBit(Carry,1);
+                    sBit(P,Carry,1);
                 if(x==0){
-                    P.sBit(Zero,1);
+                    sBit(P,Zero,1);
                 }
                 return;
             break;}
@@ -401,16 +397,16 @@ void CPU::instruction(){
             case 0xEC:{//CPX
                 int8_t x=X-read(adrAbsolute());
                 if(x<0)
-                    P.sBit(Negative,1);
+                    sBit(P,Negative,1);
                 else
-                    P.sBit(Carry,1);
+                    sBit(P,Carry,1);
                 if(x==0){
-                    P.sBit(Zero,1);
+                    sBit(P,Zero,1);
                 }
                 return;
             break;}
             case 0xF0:{//BEQ
-                if(P.gBit(Zero)){
+                if(gBit(P,Zero)){
                     cycle++;
                     PC=adrRelative();
                 }
@@ -418,7 +414,7 @@ void CPU::instruction(){
             break;}
             case 0xF8:{//SED
                 cycle+=2;
-                P.sBit(Decimal,1);
+                sBit(P,Decimal,1);
                 return;
             break;}
             default:{
@@ -428,7 +424,7 @@ void CPU::instruction(){
         }
     break;
     case 1:
-        switch(instr.gSmol(2,3)){
+        switch(gSmol(instr,2,3)){
             case 0:
                 address=adrIndirectX();
             break;
@@ -460,7 +456,7 @@ void CPU::instruction(){
             break;
         }
 
-        switch(instr.gSmol(5,3)){
+        switch(gSmol(instr,5,3)){
             case 0:{//ORA
                 A=A|read(address);
                 setZero(A);
@@ -480,11 +476,11 @@ void CPU::instruction(){
                 return;
             break;}
             case 3:{//ADC
-                int a=read(address)+A+P.gBit(Carry);
+                int a=read(address)+A+gBit(P,Carry);
                 if (a>255)
-                    P.sBit(Carry,1);
+                    sBit(P,Carry,1);
                 else
-                    P.sBit(Carry,0);
+                    sBit(P,Carry,0);
                 A=a;
                 setZero(A);
                 setNegative(A);
@@ -504,20 +500,20 @@ void CPU::instruction(){
             case 6:{//CMP
                 int8_t a=A-read(address);
                 if(a<0)
-                    P.sBit(Negative,1);
+                    sBit(P,Negative,1);
                 else
-                    P.sBit(Carry,1);
+                    sBit(P,Carry,1);
                 if(a==0){
-                    P.sBit(Zero,1);
+                    sBit(P,Zero,1);
                 }
                 return;
             break;}
             case 7:{//SBC
-                int a=A-read(address)-!P.gBit(Carry);
+                int a=A-read(address)-!gBit(P,Carry);
                 if (a>255)
-                    P.sBit(Carry,0);
+                    sBit(P,Carry,0);
                 else
-                    P.sBit(Carry,1);
+                    sBit(P,Carry,1);
                 A=a;
                 setZero(A);
                 setNegative(A);

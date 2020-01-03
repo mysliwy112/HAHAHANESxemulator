@@ -15,12 +15,12 @@ void StandardController::OUTsignal(bool out)
 
 Mem8 StandardController::write()
 {
-    return buttState.gBit(button);
+    return gBit(buttState,button);
 
 }
 
 void StandardController::readReal(vector<int> input)
 {
     for(int i=0;i++;i<maxButt)
-        buttState.sBit(i,input[i]);
+        sBit(buttState,i,input[i]);
 }
